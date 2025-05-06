@@ -28,5 +28,5 @@
 # Flutter WebRTC
 -keep class org.webrtc.** { *; }
 
-# Uncomment the following if you're using SQLite
-# -keep class com.tekartik.sqflite.** { *; }
+# SQLite
+-keep class com.tekartik.sqflite.** { *; }

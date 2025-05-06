@@ -56,17 +56,19 @@ android {
     signingConfigs {
         release {
             // You'll need to have these properties filled correctly in the key.properties file
-            // These lines are commented out for now, uncomment when ready to use
-            // storeFile = file(keystoreProperties['storeFile'])
-            // storePassword = keystoreProperties['storePassword']
-            // keyAlias = keystoreProperties['keyAlias']
-            // keyPassword = keystoreProperties['keyPassword']
-            
-            // Using debug config for now, replace with above when ready
-            storeFile = signingConfigs.debug.storeFile
-            storePassword = signingConfigs.debug.storePassword
-            keyAlias = signingConfigs.debug.keyAlias
-            keyPassword = signingConfigs.debug.keyPassword
+            // Uncomment these lines when you have your keystore file
+            if (keystorePropertiesFile.exists()) {
+                storeFile = file(keystoreProperties['storeFile'])
+                storePassword = keystoreProperties['storePassword']
+                keyAlias = keystoreProperties['keyAlias']
+                keyPassword = keystoreProperties['keyPassword']
+            } else {
+                // Fallback to debug signing for development
+                storeFile = signingConfigs.debug.storeFile
+                storePassword = signingConfigs.debug.storePassword
+                keyAlias = signingConfigs.debug.keyAlias
+                keyPassword = signingConfigs.debug.keyPassword
+            }
         }
     }
     
