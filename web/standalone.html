@@ -508,10 +508,15 @@
       const viewButtons = document.querySelectorAll('button');
       viewButtons.forEach(button => {
         button.addEventListener('click', function() {
-          const recipeTitle = this.closest('.recipe-card, .featured-recipe')
+          const recipeContainer = this.closest('.recipe-card, .featured-recipe');
+          const recipeTitle = recipeContainer
             .querySelector('.recipe-title, .featured-title').textContent;
-          alert('Viewing recipe: ' + recipeTitle);
-          // In a real app, this would navigate to recipe detail
+          
+          // Create a URL-friendly version of the recipe title
+          const recipeId = recipeTitle.toLowerCase().replace(/\s+/g, '-');
+          
+          // Navigate to recipe detail page with parameters
+          window.location.href = `recipe-detail.html?id=${encodeURIComponent(recipeId)}&name=${encodeURIComponent(recipeTitle)}`;
         });
       });
       
@@ -532,8 +537,20 @@
           e.preventDefault();
           navLinks.forEach(l => l.classList.remove('active'));
           this.classList.add('active');
-          // In a real app, this would navigate to different sections
-          console.log('Navigating to:', this.textContent);
+          
+          const section = this.textContent.trim();
+          console.log('Navigating to:', section);
+          
+          if (section === 'Home') {
+            // Already on home, just refresh
+            window.location.reload();
+          } else if (section === 'Favorites') {
+            alert('Favorites feature is coming soon!');
+          } else if (section === 'Meal Planner') {
+            alert('Meal Planner feature is coming soon!');
+          } else if (section === 'Profile') {
+            alert('Profile feature is coming soon!');
+          }
         });
       });
     });

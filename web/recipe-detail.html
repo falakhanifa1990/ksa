@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recipe Details - Airfryer Recipes</title>
+  <link rel="icon" type="image/png" href="favicon.png"/>
+  <style>
+    :root {
+      --primary-color: #6E9C56;
+      --primary-light: #F0F5EA;
+      --background-color: #F8F7F2;
+      --text-color: #333333;
+      --secondary-text: #666666;
+      --card-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      --card-background: #ffffff;
+      --border-radius: 12px;
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--background-color);
+      color: var(--text-color);
+      line-height: 1.6;
+    }
+    
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 0;
+    }
+    
+    .logo {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: var(--primary-color);
+      text-decoration: none;
+    }
+    
+    .nav-links {
+      display: flex;
+      gap: 20px;
+    }
+    
+    .nav-link {
+      color: var(--secondary-text);
+      text-decoration: none;
+      padding: 5px 0;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+    
+    .nav-link:hover, .nav-link.active {
+      color: var(--primary-color);
+      border-bottom: 2px solid var(--primary-color);
+    }
+    
+    .recipe-header {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 30px;
+      margin: 30px 0;
+      background-color: var(--card-background);
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      box-shadow: var(--card-shadow);
+    }
+    
+    .recipe-image {
+      height: 100%;
+      min-height: 350px;
+      background-color: #ddd;
+      background-image: linear-gradient(45deg, #ddd, #ccc);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #999;
+    }
+    
+    .recipe-info {
+      padding: 30px;
+    }
+    
+    .recipe-title {
+      font-size: 2rem;
+      color: var(--primary-color);
+      margin-bottom: 15px;
+      line-height: 1.2;
+    }
+    
+    .recipe-description {
+      margin-bottom: 20px;
+      color: var(--secondary-text);
+      font-size: 1.1rem;
+    }
+    
+    .recipe-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    
+    .meta-item {
+      background-color: var(--primary-light);
+      color: var(--primary-color);
+      font-size: 0.9rem;
+      padding: 8px 16px;
+      border-radius: 30px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    
+    .rating {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    
+    .rating-stars {
+      color: #FFB800;
+      font-size: 1.2rem;
+      margin-right: 5px;
+    }
+    
+    .rating-count {
+      color: var(--secondary-text);
+      font-size: 0.9rem;
+    }
+    
+    .section-title {
+      font-size: 1.5rem;
+      margin: 40px 0 20px;
+      color: var(--primary-color);
+      border-bottom: 2px solid var(--primary-light);
+      padding-bottom: 10px;
+    }
+    
+    .ingredients-list {
+      list-style-type: none;
+      margin-bottom: 40px;
+    }
+    
+    .ingredient-item {
+      display: flex;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .ingredient-item:last-child {
+      border-bottom: none;
+    }
+    
+    .quantity {
+      font-weight: 500;
+      color: var(--primary-color);
+      min-width: 60px;
+    }
+    
+    .steps-list {
+      counter-reset: step-counter;
+      list-style-type: none;
+      margin-bottom: 40px;
+    }
+    
+    .step-item {
+      display: flex;
+      margin-bottom: 20px;
+      position: relative;
+      padding-left: 40px;
+    }
+    
+    .step-item:before {
+      counter-increment: step-counter;
+      content: counter(step-counter);
+      background-color: var(--primary-color);
+      color: white;
+      font-weight: bold;
+      font-size: 0.8rem;
+      border-radius: 50%;
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .nutrition-facts {
+      background-color: var(--card-background);
+      border-radius: var(--border-radius);
+      padding: 20px;
+      box-shadow: var(--card-shadow);
+    }
+    
+    .nutrition-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 15px;
+    }
+    
+    .nutrition-item {
+      text-align: center;
+      padding: 10px;
+      background-color: var(--primary-light);
+      border-radius: 8px;
+    }
+    
+    .nutrition-value {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--primary-color);
+    }
+    
+    .nutrition-label {
+      font-size: 0.8rem;
+      color: var(--secondary-text);
+    }
+    
+    .actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    
+    button {
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 30px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: background-color 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    button:hover {
+      background-color: #5A8246;
+    }
+    
+    button.secondary {
+      background-color: transparent;
+      color: var(--primary-color);
+      border: 1px solid var(--primary-color);
+    }
+    
+    button.secondary:hover {
+      background-color: var(--primary-light);
+    }
+    
+    .timer-container {
+      background-color: var(--card-background);
+      border-radius: var(--border-radius);
+      padding: 20px;
+      box-shadow: var(--card-shadow);
+      margin: 30px 0;
+    }
+    
+    .timer {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      padding: 20px 0;
+    }
+    
+    .timer-display {
+      font-size: 3rem;
+      font-weight: 600;
+      color: var(--primary-color);
+      margin-bottom: 15px;
+    }
+    
+    .timer-controls {
+      display: flex;
+      gap: 10px;
+    }
+    
+    footer {
+      margin-top: 50px;
+      padding: 30px 0;
+      background-color: var(--primary-light);
+      text-align: center;
+      color: var(--secondary-text);
+    }
+    
+    @media (max-width: 768px) {
+      .recipe-header {
+        grid-template-columns: 1fr;
+      }
+      
+      .recipe-image {
+        min-height: 200px;
+      }
+      
+      .nav-links {
+        display: none;
+      }
+      
+      .nutrition-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <a href="index.html" class="logo">Airfryer Recipes</a>
+      <nav class="nav-links">
+        <a href="standalone.html" class="nav-link">Home</a>
+        <a href="#" class="nav-link">Favorites</a>
+        <a href="#" class="nav-link">Meal Planner</a>
+        <a href="#" class="nav-link">Profile</a>
+      </nav>
+    </header>
+    
+    <div class="recipe-header">
+      <div class="recipe-image" id="recipeImage">Recipe Image</div>
+      <div class="recipe-info">
+        <h1 class="recipe-title" id="recipeTitle">Crispy Air Fryer Chicken Wings</h1>
+        <p class="recipe-description" id="recipeDescription">
+          Perfectly crispy chicken wings made in the air fryer with minimal oil and maximum flavor. These wings are a healthier alternative to deep-fried versions but taste just as delicious!
+        </p>
+        <div class="recipe-meta" id="recipeMeta">
+          <div class="meta-item"><span>⏱️</span> 30 mins</div>
+          <div class="meta-item"><span>🍽️</span> 4 servings</div>
+          <div class="meta-item"><span>📊</span> Easy</div>
+          <div class="meta-item"><span>🌡️</span> 380°F</div>
+        </div>
+        <div class="rating">
+          <div class="rating-stars">★★★★★</div>
+          <div class="rating-count">(24 reviews)</div>
+        </div>
+        <div class="actions">
+          <button id="startTimerBtn"><span>⏱️</span> Start Timer</button>
+          <button class="secondary" id="saveRecipeBtn"><span>❤️</span> Save</button>
+          <button class="secondary" id="addToMealPlanBtn"><span>📅</span> Add to Meal Plan</button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="timer-container" id="timerSection" style="display: none;">
+      <h2 class="section-title">Cooking Timer</h2>
+      <div class="timer">
+        <div class="timer-display" id="timerDisplay">30:00</div>
+        <div class="timer-controls">
+          <button id="startPauseTimerBtn">Start</button>
+          <button id="resetTimerBtn">Reset</button>
+        </div>
+      </div>
+    </div>
+    
+    <h2 class="section-title">Ingredients</h2>
+    <ul class="ingredients-list" id="ingredientsList">
+      <li class="ingredient-item"><span class="quantity">2 lbs</span> Chicken wings</li>
+      <li class="ingredient-item"><span class="quantity">1 tbsp</span> Olive oil</li>
+      <li class="ingredient-item"><span class="quantity">1 tsp</span> Garlic powder</li>
+      <li class="ingredient-item"><span class="quantity">1 tsp</span> Paprika</li>
+      <li class="ingredient-item"><span class="quantity">1/2 tsp</span> Onion powder</li>
+      <li class="ingredient-item"><span class="quantity">1/2 tsp</span> Salt</li>
+      <li class="ingredient-item"><span class="quantity">1/4 tsp</span> Black pepper</li>
+      <li class="ingredient-item"><span class="quantity">1/4 tsp</span> Cayenne pepper (optional)</li>
+    </ul>
+    
+    <h2 class="section-title">Instructions</h2>
+    <ol class="steps-list" id="stepsList">
+      <li class="step-item">Pat dry the chicken wings with paper towels to remove excess moisture.</li>
+      <li class="step-item">In a large bowl, toss the wings with olive oil until evenly coated.</li>
+      <li class="step-item">In a small bowl, mix together all the dry spices (garlic powder, paprika, onion powder, salt, black pepper, and cayenne if using).</li>
+      <li class="step-item">Sprinkle the spice mixture over the wings and toss until evenly coated.</li>
+      <li class="step-item">Preheat your air fryer to 380°F (193°C) for 3 minutes.</li>
+      <li class="step-item">Place the wings in the air fryer basket in a single layer, making sure they aren't touching (cook in batches if necessary).</li>
+      <li class="step-item">Cook for 12 minutes, then flip the wings and cook for another 12 minutes until golden brown and crispy.</li>
+      <li class="step-item">Check that the internal temperature has reached 165°F (74°C) using a meat thermometer.</li>
+      <li class="step-item">Serve immediately while hot, with your favorite dipping sauce.</li>
+    </ol>
+    
+    <h2 class="section-title">Nutrition Facts</h2>
+    <div class="nutrition-facts">
+      <div class="nutrition-grid">
+        <div class="nutrition-item">
+          <div class="nutrition-value">320</div>
+          <div class="nutrition-label">Calories</div>
+        </div>
+        <div class="nutrition-item">
+          <div class="nutrition-value">25g</div>
+          <div class="nutrition-label">Protein</div>
+        </div>
+        <div class="nutrition-item">
+          <div class="nutrition-value">22g</div>
+          <div class="nutrition-label">Fat</div>
+        </div>
+        <div class="nutrition-item">
+          <div class="nutrition-value">0g</div>
+          <div class="nutrition-label">Carbs</div>
+        </div>
+        <div class="nutrition-item">
+          <div class="nutrition-value">0g</div>
+          <div class="nutrition-label">Fiber</div>
+        </div>
+        <div class="nutrition-item">
+          <div class="nutrition-value">720mg</div>
+          <div class="nutrition-label">Sodium</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <footer>
+    <div class="container">
+      <p>© 2025 Airfryer Recipes App | All rights reserved</p>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Get recipe parameters from URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const recipeId = urlParams.get('id');
+      const recipeName = urlParams.get('name');
+      
+      // If we have a recipe name from the URL, update the page title
+      if (recipeName) {
+        document.title = recipeName + " - Airfryer Recipes";
+        document.getElementById('recipeTitle').textContent = recipeName;
+      }
+      
+      // Timer functionality
+      let timerInterval;
+      let timerRunning = false;
+      let timeLeft = 30 * 60; // 30 minutes in seconds
+      
+      function updateTimerDisplay() {
+        const minutes = Math.floor(timeLeft / 60);
+        const seconds = timeLeft % 60;
+        document.getElementById('timerDisplay').textContent = 
+          `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+      }
+      
+      function startTimer() {
+        if (!timerRunning) {
+          timerRunning = true;
+          document.getElementById('startPauseTimerBtn').textContent = 'Pause';
+          timerInterval = setInterval(function() {
+            timeLeft--;
+            updateTimerDisplay();
+            
+            if (timeLeft <= 0) {
+              clearInterval(timerInterval);
+              timerRunning = false;
+              document.getElementById('startPauseTimerBtn').textContent = 'Start';
+              alert('Timer finished!');
+            }
+          }, 1000);
+        } else {
+          clearInterval(timerInterval);
+          timerRunning = false;
+          document.getElementById('startPauseTimerBtn').textContent = 'Resume';
+        }
+      }
+      
+      function resetTimer() {
+        clearInterval(timerInterval);
+        timerRunning = false;
+        timeLeft = 30 * 60;
+        updateTimerDisplay();
+        document.getElementById('startPauseTimerBtn').textContent = 'Start';
+      }
+      
+      // Event listeners
+      document.getElementById('startTimerBtn').addEventListener('click', function() {
+        document.getElementById('timerSection').style.display = 'block';
+        this.disabled = true;
+      });
+      
+      document.getElementById('startPauseTimerBtn').addEventListener('click', startTimer);
+      document.getElementById('resetTimerBtn').addEventListener('click', resetTimer);
+      
+      document.getElementById('saveRecipeBtn').addEventListener('click', function() {
+        if (this.textContent.includes('Save')) {
+          this.innerHTML = '<span>❤️</span> Saved';
+          alert('Recipe saved to your favorites!');
+        } else {
+          this.innerHTML = '<span>❤️</span> Save';
+          alert('Recipe removed from your favorites!');
+        }
+      });
+      
+      document.getElementById('addToMealPlanBtn').addEventListener('click', function() {
+        alert('Recipe added to your meal plan!');
+      });
+    });
+  </script>
+</body>
+</html>
