@@ -1,3 +1,5 @@
+import 'dart:io';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -14,19 +16,39 @@ class DatabaseService {
   Future<Database> get database async {
     if (_database != null) return _database!;
     
-    _database = await _initDatabase();
-    return _database!;
+    try {
+      _database = await _initDatabase();
+      return _database!;
+    } catch (e) {
+      print('Error initializing database: $e');
+      // For web or when database fails, return an in-memory database
+      return await openDatabase(
+        ':memory:',
+        version: 1,
+        onCreate: _createDb,
+      );
+    }
   }
   
   Future<Database> _initDatabase() async {
-    final dbPath = await getDatabasesPath();
-    final path = join(dbPath, 'airfryer_recipes.db');
-    
-    return await openDatabase(
-      path,
-      version: 1,
-      onCreate: _createDb,
-    );
+    if (kIsWeb) {
+      // For web, use in-memory database
+      return await openDatabase(
+        ':memory:',
+        version: 1,
+        onCreate: _createDb,
+      );
+    } else {
+      // For mobile platforms
+      final dbPath = await getDatabasesPath();
+      final path = join(dbPath, 'airfryer_recipes.db');
+      
+      return await openDatabase(
+        path,
+        version: 1,
+        onCreate: _createDb,
+      );
+    }
   }
   
   Future<void> _createDb(Database db, int version) async {

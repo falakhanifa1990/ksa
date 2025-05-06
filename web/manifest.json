@@ -1,11 +1,11 @@
 {
-    "name": "workspace",
-    "short_name": "workspace",
+    "name": "Airfryer Recipes",
+    "short_name": "Airfryer Recipes",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#6E9C56",
+    "theme_color": "#6E9C56",
+    "description": "A comprehensive Flutter-based Airfryer Recipe mobile app with modern UI, recipe management, and meal planning features.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
