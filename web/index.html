@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <!-- This base href is used for all relative URLs -->
   <base href="/">
 
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
   <meta name="description" content="Airfryer Recipes - A Flutter app for airfryer cooking.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <!-- iOS meta tags & icons -->
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -17,62 +19,172 @@
   <link rel="icon" type="image/png" href="favicon.png"/>
 
   <title>Airfryer Recipes</title>
-  <link rel="manifest" href="manifest.json">
   
+  <!-- Static fallback content if Flutter fails to load -->
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #F8F7F2;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+    
+    .app-container {
+      max-width: 800px;
+      padding: 20px;
+    }
+    
+    h1 {
+      color: #6E9C56;
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+    }
+    
+    .loading-text {
+      color: #6E9C56;
+      font-size: 1.2rem;
+      margin: 30px 0;
+    }
+    
+    .fallback-content {
+      display: none;
+      margin-top: 30px;
+    }
+    
+    .recipe-box {
+      background-color: white;
+      border-radius: 12px;
+      padding: 20px;
+      margin: 20px 0;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      text-align: left;
+    }
+    
+    .recipe-title {
+      color: #6E9C56;
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+    }
+    
+    .recipe-description {
+      color: #555;
+      margin-bottom: 15px;
+    }
+    
+    .recipe-details {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-bottom: 15px;
+    }
+    
+    .detail-item {
+      background-color: #F0F5EA;
+      padding: 5px 10px;
+      border-radius: 15px;
+      font-size: 0.9rem;
+      color: #6E9C56;
+    }
+    
+    .ingredients-list, .steps-list {
+      padding-left: 20px;
+    }
+    
+    .app-footer {
+      margin-top: 40px;
+      color: #888;
+      font-size: 0.9rem;
+    }
+    
+    /* Show fallback content after 5 seconds if Flutter doesn't load */
+    @media (prefers-reduced-motion: no-preference) {
+      @keyframes showFallback {
+        to { display: block; }
+      }
+      .fallback-content {
+        animation: showFallback 0s 5s forwards;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    <h1>Airfryer Recipes</h1>
+    
+    <div id="flutter-app">
+      <div class="loading-text">
+        <p>Loading Airfryer Recipes App...</p>
+      </div>
+    </div>
+    
+    <!-- Fallback content that shows if Flutter fails to load -->
+    <div class="fallback-content" id="fallback-content">
+      <div class="recipe-box">
+        <div class="recipe-title">Crispy Air Fryer Chicken Wings</div>
+        <div class="recipe-description">
+          Perfectly crispy chicken wings made in the air fryer with minimal oil and maximum flavor.
+        </div>
+        <div class="recipe-details">
+          <span class="detail-item">30 minutes</span>
+          <span class="detail-item">4 servings</span>
+          <span class="detail-item">Easy</span>
+          <span class="detail-item">380°F</span>
+        </div>
+        <div class="ingredients-section">
+          <h3>Ingredients:</h3>
+          <ul class="ingredients-list">
+            <li>2 lbs chicken wings, separated at joints</li>
+            <li>1 tbsp baking powder (aluminum-free)</li>
+            <li>1 tsp salt</li>
+            <li>1 tsp garlic powder</li>
+            <li>1 tsp paprika</li>
+            <li>1/2 tsp black pepper</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    
+    <div class="app-footer">
+      © 2025 Airfryer Recipes App
+    </div>
+  </div>
+
+  <!-- Flutter initialization script -->
   <script>
     // The value below is injected by flutter build, do not touch.
-    const serviceWorkerVersion = null;
+    var serviceWorkerVersion = null;
   </script>
   <!-- This script adds the flutter initialization JS code -->
   <script src="flutter.js" defer></script>
-  
-  <!-- Fix for MIME type issue in Replit -->
-  <script>
-    // Add correct MIME types for Flutter scripts
-    window.flutterConfiguration = {
-      canvasKitBaseUrl: "canvaskit/"
-    };
-  </script>
-</head>
-<body>
-  <div id="loading">
-    <style>
-      body {
-        background-color: #F8F7F2;
-        margin: 0;
-        padding: 0;
-      }
-      #loading {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        font-family: 'Roboto', sans-serif;
-      }
-      .loading-text {
-        color: #6E9C56;
-        font-size: 24px;
-        text-align: center;
-      }
-    </style>
-    <div class="loading-text">
-      <p>Loading Airfryer Recipes App...</p>
-    </div>
-  </div>
-  
   <script>
     window.addEventListener('load', function(ev) {
+      var loading = document.querySelector('#loading');
       // Download main.dart.js
-      _flutter.loader.load({
+      _flutter.loader.loadEntrypoint({
         serviceWorker: {
           serviceWorkerVersion: serviceWorkerVersion,
         },
         onEntrypointLoaded: function(engineInitializer) {
           engineInitializer.initializeEngine().then(function(appRunner) {
+            document.getElementById('fallback-content').style.display = 'none';
             appRunner.runApp();
           });
         }
       });
+      
+      // After 8 seconds, if the app hasn't loaded, show fallback content
+      setTimeout(function() {
+        if (document.querySelector('.loading-text').style.display !== 'none') {
+          console.log('Flutter app failed to load, showing fallback content');
+          document.getElementById('fallback-content').style.display = 'block';
+        }
+      }, 8000);
     });
   </script>
 </body>

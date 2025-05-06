@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Airfryer Recipes</title>
+  <link rel="icon" type="image/png" href="favicon.png"/>
+  <style>
+    :root {
+      --primary-color: #6E9C56;
+      --primary-light: #F0F5EA;
+      --background-color: #F8F7F2;
+      --text-color: #333333;
+      --secondary-text: #666666;
+      --card-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      --card-background: #ffffff;
+      --border-radius: 12px;
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--background-color);
+      color: var(--text-color);
+      line-height: 1.6;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 0;
+    }
+    
+    .logo {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: var(--primary-color);
+    }
+    
+    .search-container {
+      flex: 1;
+      max-width: 400px;
+      margin: 0 20px;
+    }
+    
+    .search-input {
+      width: 100%;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 20px;
+      background-color: var(--card-background);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+    
+    .nav-links {
+      display: flex;
+      gap: 20px;
+    }
+    
+    .nav-link {
+      color: var(--secondary-text);
+      text-decoration: none;
+      padding: 5px 0;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+    
+    .nav-link:hover, .nav-link.active {
+      color: var(--primary-color);
+      border-bottom: 2px solid var(--primary-color);
+    }
+    
+    .categories {
+      display: flex;
+      gap: 15px;
+      margin: 20px 0;
+      overflow-x: auto;
+      padding-bottom: 10px;
+    }
+    
+    .category {
+      background-color: var(--primary-light);
+      color: var(--primary-color);
+      border-radius: 20px;
+      padding: 10px 20px;
+      white-space: nowrap;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.3s;
+    }
+    
+    .category:hover, .category.active {
+      background-color: var(--primary-color);
+      color: white;
+    }
+    
+    .recipe-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 30px;
+      margin-top: 30px;
+    }
+    
+    .recipe-card {
+      background-color: var(--card-background);
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      box-shadow: var(--card-shadow);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    
+    .recipe-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+    }
+    
+    .recipe-image {
+      width: 100%;
+      height: 200px;
+      background-color: #eee;
+      background-image: linear-gradient(45deg, #eee, #ddd);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #999;
+    }
+    
+    .recipe-content {
+      padding: 20px;
+    }
+    
+    .recipe-title {
+      font-size: 1.3rem;
+      margin-bottom: 10px;
+      color: var(--primary-color);
+      font-weight: 600;
+    }
+    
+    .recipe-description {
+      color: var(--secondary-text);
+      margin-bottom: 15px;
+    }
+    
+    .recipe-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+    
+    .meta-item {
+      background-color: var(--primary-light);
+      color: var(--primary-color);
+      font-size: 0.85rem;
+      padding: 5px 10px;
+      border-radius: 15px;
+    }
+    
+    .recipe-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid #eee;
+      padding-top: 15px;
+    }
+    
+    .rating {
+      display: flex;
+      color: #FFB800;
+    }
+    
+    .rating span {
+      margin-left: 5px;
+      color: var(--secondary-text);
+    }
+    
+    button {
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: background-color 0.3s;
+    }
+    
+    button:hover {
+      background-color: #5A8246;
+    }
+    
+    .featured-recipe {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      margin: 30px 0;
+      background-color: var(--card-background);
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      box-shadow: var(--card-shadow);
+    }
+    
+    .featured-image {
+      background-color: #ddd;
+      background-image: linear-gradient(45deg, #ddd, #ccc);
+      height: 100%;
+      min-height: 300px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #999;
+    }
+    
+    .featured-content {
+      padding: 30px;
+    }
+    
+    .featured-title {
+      font-size: 1.8rem;
+      color: var(--primary-color);
+      margin-bottom: 15px;
+    }
+    
+    .featured-description {
+      margin-bottom: 20px;
+    }
+    
+    .section-title {
+      font-size: 1.5rem;
+      margin: 40px 0 20px;
+      color: var(--primary-color);
+    }
+    
+    footer {
+      margin-top: 50px;
+      padding: 30px 0;
+      background-color: var(--primary-light);
+      text-align: center;
+      color: var(--secondary-text);
+    }
+    
+    @media (max-width: 768px) {
+      .featured-recipe {
+        grid-template-columns: 1fr;
+      }
+      
+      .featured-image {
+        min-height: 200px;
+      }
+      
+      .nav-links {
+        display: none;
+      }
+      
+      .search-container {
+        max-width: none;
+        margin: 0 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo">Airfryer Recipes</div>
+      <div class="search-container">
+        <input type="text" class="search-input" placeholder="Search recipes...">
+      </div>
+      <nav class="nav-links">
+        <a href="#" class="nav-link active">Home</a>
+        <a href="#" class="nav-link">Favorites</a>
+        <a href="#" class="nav-link">Meal Planner</a>
+        <a href="#" class="nav-link">Profile</a>
+      </nav>
+    </header>
+    
+    <div class="categories">
+      <div class="category active">All Recipes</div>
+      <div class="category">Chicken</div>
+      <div class="category">Vegetables</div>
+      <div class="category">Fish & Seafood</div>
+      <div class="category">Desserts</div>
+      <div class="category">Quick & Easy</div>
+      <div class="category">Low Calorie</div>
+    </div>
+    
+    <div class="featured-recipe">
+      <div class="featured-image">Featured Recipe Image</div>
+      <div class="featured-content">
+        <div class="featured-title">Crispy Air Fryer Chicken Wings</div>
+        <div class="featured-description">
+          Perfectly crispy chicken wings made in the air fryer with minimal oil and maximum flavor. These wings are a healthier alternative to deep-fried versions but taste just as delicious!
+        </div>
+        <div class="recipe-meta">
+          <div class="meta-item">30 mins</div>
+          <div class="meta-item">4 servings</div>
+          <div class="meta-item">Easy</div>
+          <div class="meta-item">380°F</div>
+        </div>
+        <button>View Recipe</button>
+      </div>
+    </div>
+    
+    <h2 class="section-title">Popular Recipes</h2>
+    
+    <div class="recipe-grid">
+      <div class="recipe-card">
+        <div class="recipe-image">Recipe Image</div>
+        <div class="recipe-content">
+          <div class="recipe-title">Air Fryer Crispy Roasted Potatoes</div>
+          <div class="recipe-description">Perfectly crispy potatoes with a fluffy interior.</div>
+          <div class="recipe-meta">
+            <div class="meta-item">20 mins</div>
+            <div class="meta-item">4 servings</div>
+          </div>
+          <div class="recipe-footer">
+            <div class="rating">
+              ★★★★★ <span>(24)</span>
+            </div>
+            <button>View</button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="recipe-card">
+        <div class="recipe-image">Recipe Image</div>
+        <div class="recipe-content">
+          <div class="recipe-title">Air Fryer Salmon</div>
+          <div class="recipe-description">Tender and flaky salmon with a delicious seasoning.</div>
+          <div class="recipe-meta">
+            <div class="meta-item">15 mins</div>
+            <div class="meta-item">2 servings</div>
+          </div>
+          <div class="recipe-footer">
+            <div class="rating">
+              ★★★★☆ <span>(18)</span>
+            </div>
+            <button>View</button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="recipe-card">
+        <div class="recipe-image">Recipe Image</div>
+        <div class="recipe-content">
+          <div class="recipe-title">Air Fryer Vegetable Medley</div>
+          <div class="recipe-description">Perfectly roasted mixed vegetables with herbs.</div>
+          <div class="recipe-meta">
+            <div class="meta-item">12 mins</div>
+            <div class="meta-item">3 servings</div>
+          </div>
+          <div class="recipe-footer">
+            <div class="rating">
+              ★★★★★ <span>(12)</span>
+            </div>
+            <button>View</button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="recipe-card">
+        <div class="recipe-image">Recipe Image</div>
+        <div class="recipe-content">
+          <div class="recipe-title">Air Fryer Chocolate Chip Cookies</div>
+          <div class="recipe-description">Soft and chewy cookies with melty chocolate chips.</div>
+          <div class="recipe-meta">
+            <div class="meta-item">10 mins</div>
+            <div class="meta-item">12 cookies</div>
+          </div>
+          <div class="recipe-footer">
+            <div class="rating">
+              ★★★★☆ <span>(31)</span>
+            </div>
+            <button>View</button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="recipe-card">
+        <div class="recipe-image">Recipe Image</div>
+        <div class="recipe-content">
+          <div class="recipe-title">Air Fryer Garlic Shrimp</div>
+          <div class="recipe-description">Juicy shrimp cooked to perfection with garlic and herbs.</div>
+          <div class="recipe-meta">
+            <div class="meta-item">8 mins</div>
+            <div class="meta-item">2 servings</div>
+          </div>
+          <div class="recipe-footer">
+            <div class="rating">
+              ★★★★★ <span>(9)</span>
+            </div>
+            <button>View</button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="recipe-card">
+        <div class="recipe-image">Recipe Image</div>
+        <div class="recipe-content">
+          <div class="recipe-title">Air Fryer Apple Chips</div>
+          <div class="recipe-description">Sweet and crispy apple chips with cinnamon.</div>
+          <div class="recipe-meta">
+            <div class="meta-item">15 mins</div>
+            <div class="meta-item">2 servings</div>
+          </div>
+          <div class="recipe-footer">
+            <div class="rating">
+              ★★★★★ <span>(16)</span>
+            </div>
+            <button>View</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <h2 class="section-title">Quick & Easy Recipes</h2>
+    
+    <div class="recipe-grid">
+      <div class="recipe-card">
+        <div class="recipe-image">Recipe Image</div>
+        <div class="recipe-content">
+          <div class="recipe-title">5-Minute Air Fryer Grilled Cheese</div>
+          <div class="recipe-description">The quickest way to make a crispy grilled cheese sandwich.</div>
+          <div class="recipe-meta">
+            <div class="meta-item">5 mins</div>
+            <div class="meta-item">1 serving</div>
+          </div>
+          <div class="recipe-footer">
+            <div class="rating">
+              ★★★★☆ <span>(7)</span>
+            </div>
+            <button>View</button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="recipe-card">
+        <div class="recipe-image">Recipe Image</div>
+        <div class="recipe-content">
+          <div class="recipe-title">Air Fryer Toast</div>
+          <div class="recipe-description">Perfectly crispy toast in just minutes.</div>
+          <div class="recipe-meta">
+            <div class="meta-item">3 mins</div>
+            <div class="meta-item">2 servings</div>
+          </div>
+          <div class="recipe-footer">
+            <div class="rating">
+              ★★★★★ <span>(5)</span>
+            </div>
+            <button>View</button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="recipe-card">
+        <div class="recipe-image">Recipe Image</div>
+        <div class="recipe-content">
+          <div class="recipe-title">Air Fryer Reheated Pizza</div>
+          <div class="recipe-description">Bring leftover pizza back to crispy perfection.</div>
+          <div class="recipe-meta">
+            <div class="meta-item">4 mins</div>
+            <div class="meta-item">1 serving</div>
+          </div>
+          <div class="recipe-footer">
+            <div class="rating">
+              ★★★★★ <span>(22)</span>
+            </div>
+            <button>View</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <footer>
+    <div class="container">
+      <p>© 2025 Airfryer Recipes App | All rights reserved</p>
+    </div>
+  </footer>
+
+  <script>
+    // Add event listeners for interactive elements
+    document.addEventListener('DOMContentLoaded', function() {
+      // Category selection
+      const categories = document.querySelectorAll('.category');
+      categories.forEach(category => {
+        category.addEventListener('click', function() {
+          categories.forEach(c => c.classList.remove('active'));
+          this.classList.add('active');
+          // In a real app, this would filter recipes
+          console.log('Selected category:', this.textContent);
+        });
+      });
+      
+      // View recipe buttons
+      const viewButtons = document.querySelectorAll('button');
+      viewButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          const recipeTitle = this.closest('.recipe-card, .featured-recipe')
+            .querySelector('.recipe-title, .featured-title').textContent;
+          alert('Viewing recipe: ' + recipeTitle);
+          // In a real app, this would navigate to recipe detail
+        });
+      });
+      
+      // Search functionality
+      const searchInput = document.querySelector('.search-input');
+      searchInput.addEventListener('keyup', function(e) {
+        if (e.key === 'Enter') {
+          alert('Searching for: ' + this.value);
+          // In a real app, this would perform a search
+          this.value = '';
+        }
+      });
+      
+      // Navigation links
+      const navLinks = document.querySelectorAll('.nav-link');
+      navLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          navLinks.forEach(l => l.classList.remove('active'));
+          this.classList.add('active');
+          // In a real app, this would navigate to different sections
+          console.log('Navigating to:', this.textContent);
+        });
+      });
+    });
+  </script>
+</body>
+</html>
